@@ -5,10 +5,14 @@ export default [
   js.configs.recommended,
   {
     files: ["**/*.js"],
+    ignores: ["node_modules/**", "coverage/**"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "commonjs",
-      globals: globals.node,
+      globals: {
+        ...globals.node,
+        ...globals.jest,
+      },
     },
     rules: {
       "no-unused-vars": "error",
