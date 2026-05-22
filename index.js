@@ -6,3 +6,5 @@ lib.add('1984', 'Orwell', 1949);
 lib.add('Clean Code', 'Martin', 2008);
 
 lib.printAll();
+
+lib.addBook()
