@@ -1,36 +1,39 @@
 const Book = require('./Book');
 
+const ANCIENT_YEAR_LIMIT = 1900;
+const MODERN_YEAR_LIMIT  = 2000;
+
 class Library {
-  constructor() {
-    this.books = [];
+  #books = [];
+
+  addBook(title, author, year) {
+    this.#books.push(new Book(title, author, year));
   }
 
-  add(t, a, y) {
-    this.books.push(new Book(t, a, y));
+  getBooks() { return this.#books; }
+
+  getCategoryLabel(book) {
+    if (book.getPublicationYear() < ANCIENT_YEAR_LIMIT) return '[ANTIGUO] ';
+    if (book.getPublicationYear() < MODERN_YEAR_LIMIT)  return '[SIGLO XX] ';
+    return '[MODERNO] ';
   }
 
   printAll() {
-    this.books.forEach(b => {
-      if (b.y < 1900) {
-        console.log('[ANTIGUO] '  + b.t + ' - ' + b.a);
-      } else if (b.y >= 1900 && b.y < 2000) {
-        console.log('[SIGLO XX] ' + b.t + ' - ' + b.a);
-      } else {
-        console.log('[MODERNO] '  + b.t + ' - ' + b.a);
-      }
-      if (!b.av) console.log('  -> No disponible');
+    this.#books.forEach(book => {
+      const label = this.getCategoryLabel(book);
+      console.log(label + book.getTitle() + ' - ' + book.getAuthor());
+      if (!book.isAvailable()) console.log('  -> No disponible');
     });
   }
 
-  lend(t) {
-    for (let b of this.books) {
-      if (b.t === t && b.av) {
-        b.av = false;
+  lend(title) {
+    for (const book of this.#books) {
+      if (book.getTitle() === title && book.isAvailable()) {
+        book.setAvailable(false);
         return true;
       }
     }
     return false;
   }
 }
-
 module.exports = Library;
